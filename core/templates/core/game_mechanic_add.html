@@ -1,0 +1,24 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% block content %}
+    <div class="row">
+        <h1 class="">Adicionar Mecânica</h1>
+    </div>
+
+        <form action="" method="post" class="form">
+            {% csrf_token %}
+            <div class="row">
+            {% bootstrap_form form %}
+            </div>
+            <div class="row">
+            {% buttons %}
+                <button type="submit" class="btn btn-success">
+                    Salvar
+                </button>
+            {% endbuttons %}
+        </div>
+        </form>
+
+
+{% endblock %}

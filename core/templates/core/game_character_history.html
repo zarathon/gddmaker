@@ -1,0 +1,147 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% load gddmaker_extras %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                {% bootstrap_messages %}
+                <h1>Histórico de {{ character.name }}</h1>
+                <p>Na tabela abaixo veja as versões deste elemento. Clique em "Comparar com versão atual" para
+                    visualizar lado a lado a versão anterior com a versão atual.</p>
+            </div>
+
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Versões Anteriores</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <th>Data da Modificação</th>
+                            <th>Autor</th>
+                            <th>Versão Ativa</th>
+                            <th></th>
+                            </thead>
+                            <tbody>
+                            {% for version in versions %}
+                                {% if forloop.first %}
+                                    <tr class="success">
+                                        <td>{{ version.revision.date_created }}</td>
+                                        <td>{{ version.revision.user }}</td>
+                                        <td>{% bootstrap_icon "ok" %}</td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>{{ version.revision.date_created }}</td>
+                                        <td>{{ version.revision.user }}</td>
+                                        <td>{% bootstrap_icon "remove" %}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-default center-block"
+                                                    data-toggle="modal"
+                                                    data-target="#versao{{ version.id }}">Comparar com versão atual
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Modals-->
+    {% for version in versions %}
+        <div class="modal fade" id="versao{{ version.id }}" tabindex="-1" role="dialog"
+             aria-labelledby="versao{{ version.id }}">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Comparando versões</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Versão Atual</strong>
+                                <h5>Nome:</h5>
+                                <p class="small">{{ character.name }}</p>
+                                <h5>Descrição: </h5>
+                                <p class="small">{{ character.description|safe }}</p>
+
+                                <h5>Mecânicas</h5>
+                                <p class="small">
+                                {% for mechanic in character.mechanics.all %}
+                                    {% if forloop.last %}
+                                        {{ mechanic }}.
+                                    {% else %}
+                                        {{ mechanic }},
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+
+                                <h5>Mídias</h5>
+                                <p class="small">
+                                {% for media in character.medias.all %}
+                                    {% if forloop.last %}
+                                        {{ media }}.
+                                    {% else %}
+                                        {{ media }},
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Versão de {{ version.revision.date_created }}</strong>
+                                <h5>Nome:</h5>
+                                <p class="small">
+                                    {{ version.field_dict|get_item:"name" }}
+                                </p>
+                                <h5>Descrição:</h5>
+                                <p class="small">
+                                    {{ version.field_dict|get_item:"description"|safe }}
+                                </p>
+
+                                <h5>Mecânicas</h5>
+                                <p class="small">
+                                {% for mechanic in version.field_dict|get_item:"mechanics" %}
+                                    {% if forloop.last %}
+                                        {{ mechanic|get_mechanic }}.
+                                    {% else %}
+                                        {{ mechanic|get_mechanic }},
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+
+                                <h5>Mídias</h5>
+                                <p class="small">
+                                {% for media in version.field_dict|get_item:"medias" %}
+                                    {% if forloop.last %}
+                                        {{ media|get_media }}.
+                                    {% else %}
+                                        {{ media|get_media }},
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

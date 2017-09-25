@@ -1,0 +1,185 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                {% bootstrap_messages %}
+                <h1>{{ game.name }}</h1>
+                <p>{{ game.description|safe }}</p>
+            </div>
+
+            <div class="row">
+                <h3>Colaboradores <span class="badge">{{ game.users.count }}</span></h3>
+                <ul class="list-group">
+                    {% for colab in game.users.all %}
+                        <li class="list-group-item">
+                            {{ colab.first_name }}
+                            {% if user.id != colab.id %}
+                                <a href="{% url 'core:game_user_remove' game.id colab.id %}"
+                                   class="btn btn-sm btn-danger badge confirm-remove">X</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="row">
+                <h3>Fases <span class="badge">{{ game.level_set.count }}</span></h3>
+
+                {% for level in game.level_set.all %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ level.name }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>{{ level.description|safe }}</p>
+                            <a href="{% url 'core:game_level_detail' game.id level.id %}" class="btn btn-info">
+                                {% bootstrap_icon 'list-alt' %}
+                                Ver detalhes
+                            </a>
+                            <a href="{% url 'core:game_level_edit' game.id level.id %}" class="btn btn-warning">
+                                {% bootstrap_icon 'pencil' %}
+                                Editar esta Fase
+                            </a>
+                            <a href="{% url 'core:game_level_remove' game.id level.id %}"
+                               class="confirm-remove btn btn-danger">
+                                {% bootstrap_icon 'remove' %}
+                                Apagar esta Fase
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ações</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'core:game_pdf' game.id %}" target="_blank" class="btn btn-default center-block">Gerar PDF</a>
+                    <a href="{% url 'core:game_level_add' game.id %}" class="btn btn-success center-block">Adicionar
+                        Fase</a>
+                    <a href="#" class="btn btn-primary center-block" data-toggle="modal"
+                       data-target="#adicionarColaborador">Adicionar Colaborador ao Jogo</a>
+                    <a href="{% url 'core:game_history' game.id %}" class="center-block btn btn-info">Ver histórico</a>
+                    <a href="{% url 'core:game_edit' game.id %}" class="center-block btn btn-warning">Editar este
+                        Jogo</a>
+                    <a href="{% url 'core:game_remove' game.id %}" class="confirm-remove center-block btn btn-danger">Apagar
+                        este Jogo</a>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Personagens <span class="badge">{{ game.character_set.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+                    {% for character in game.character_set.all %}
+                        <a class="sem-linha" href="{% url 'core:game_character_detail' game.id character.id %}">
+                            <span class="label label-info text-uppercase">
+                                {% bootstrap_icon 'user' %}
+                                {{ character.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                    <hr/>
+                    <a href="{% url 'core:game_character_list' game.id %}" class="center-block btn btn-sm btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                    <a href="{% url 'core:game_character_add' game.id %}" class="center-block btn-sm btn btn-info">
+                        {% bootstrap_icon 'plus' %}
+                        Adicionar Novo Personagem
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mecânicas <span class="badge">{{ game.mechanic_set.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+
+                    {% for mechanic in game.mechanic_set.all %}
+                        <a class="sem-linha" href="{% url 'core:game_mechanic_detail' game.id mechanic.id %}">
+                            <span class="label label-warning text-uppercase">
+                                {% bootstrap_icon 'cog' %}
+                                {{ mechanic.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+
+                    <hr/>
+                    <a href="{% url 'core:game_mechanic_list' game.id %}" class="center-block btn btn-sm btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                    <a href="{% url 'core:game_mechanic_add' game.id %}" class="center-block btn btn-sm btn-warning">
+                        {% bootstrap_icon 'plus' %}
+                        Adicionar Nova Mecânica
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mídias <span class="badge">{{ game.media_set.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+
+                    {% for media in game.media_set.all %}
+                        <a class="sem-linha" href="{% url 'core:game_media_detail' game.id media.id %}">
+                            <span class="label label-success text-uppercase">
+                                {% bootstrap_icon 'blackboard' %}
+                                {{ media.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+
+
+                    <hr/>
+                    <a href="{% url 'core:game_media_list' game.id %}" class="center-block btn btn-sm btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                    <a href="{% url 'core:game_media_add' game.id %}" class="center-block btn btn-sm btn-success">
+                        {% bootstrap_icon 'plus' %}
+                        Adicionar Nova Mídia
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Adicionar Colaborador-->
+    <div class="modal fade" id="adicionarColaborador" tabindex="-1" role="dialog"
+         aria-labelledby="adicionarColaborador">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Adicionar Colaborador ao Jogo</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'core:game_user_add' game.id %}" method="post" class="form">
+                        {% csrf_token %}
+                        <p>Adicione o login ou o email do colaborador que você quer adicionar ao seu jogo e clique no
+                            botão adicionar.</p>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">E-mail ou Login</label>
+                            <input type="text" class="form-control" name="colaborador-input"
+                                   placeholder="O Colaborador já deve está cadastrado no GDDMaker">
+                        </div>
+                        <input type="submit" class="btn btn-success" value="Adicionar"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

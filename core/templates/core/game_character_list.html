@@ -1,0 +1,50 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% load gddmaker_extras %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                {% bootstrap_messages %}
+                <h1>Todos os personagens do jogo: {{ game }}</h1>
+                <p>Clique no item a sua escolha para ver mais detalhes</p>
+            </div>
+
+            <div class="row">
+            {% for character in game.character_set.all %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a class="" role="button" data-toggle="collapse" href="#{{ character.id }}" aria-expanded="false" aria-controls="collapseExample">
+                        <h3 class="panel-title">
+                                {{ character.name }}
+                        </h3>
+                    </a>
+                    </div>
+                    <div class="panel-body collapse"  id="{{ character.id }}">
+                        <p>{{ character.description|safe }}</p>
+                        <a href="{% url 'core:game_character_detail' game.id character.id %}" class="btn btn-info">
+                            {% bootstrap_icon 'list-alt' %}
+                            Ver detalhes
+                        </a>
+                        <a href="{% url 'core:game_character_edit' game.id character.id %}" class="btn btn-warning">
+                            {% bootstrap_icon 'pencil' %}
+                            Editar este Personagem
+                        </a>
+                        <a href="{% url 'core:game_character_remove' game.id character.id %}"
+                           class="confirm-remove btn btn-danger">
+                            {% bootstrap_icon 'remove' %}
+                            Apagar este Personagem
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,9 @@
+db.sqlite3
+.idea/
+*.pyc
+
+core/__pycache__/
+core/migrations/__pycache__/
+core/templatetags/__pycache__/
+gddmaker/__pycache__/
+media/

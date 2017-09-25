@@ -1,0 +1,286 @@
+{% load staticfiles %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>GDD - {{ game.name }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <style type="text/css">
+        @page {
+            margin: 1cm;
+            margin-bottom: 2.5cm;
+            margin-top: 2.5cm;
+            @frame footer {
+                -pdf-frame-content: footerContent;
+                bottom: 1cm;
+                height: 1cm;
+            }
+            @frame header {
+                -pdf-frame-content: headerContent;
+                top: 1cm;
+                height: 3cm;
+            }
+        }
+
+        h1 {
+            font-size: 20pt;
+            text-align: center;
+        }
+        h2{
+            font-size: 17pt;
+            text-align: center;
+        }
+        h3{
+            font-size: 14pt;
+        }
+
+        body {
+            font-size: 12pt;
+        }
+        small{
+            font-size: small;
+        }
+
+        .center{
+            margin: 0 auto;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="headerContent" class="center">
+    <small>{{ game.name }}</small>
+</div>
+
+<h1>Jogo: {{ game.name }}</h1>
+<p>
+    <strong>Descrição: </strong>
+    {{ game.description|safe }}
+</p>
+<hr/>
+<h2>Visão geral dos elementos do jogo</h2>
+<h3>Fases</h3>
+<ul>
+    {% for level in game.level_set.all %}
+        <li>{{ level }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Personagens</h3>
+<ul>
+    {% for character in game.character_set.all %}
+        <li>{{ character }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Mecânicas</h3>
+<ul>
+    {% for mechanic in game.mechanic_set.all %}
+        <li>{{ mechanic }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Mídias</h3>
+<ul>
+    {% for media in game.media_set.all %}
+        <li>{{ media }}</li>
+    {% endfor %}
+</ul>
+
+<hr/>
+
+<h2>Personagens</h2>
+{% for character in game.character_set.all %}
+    <h3>Nome: {{ character.name }}</h3>
+    <p>
+        <strong>Descrição: </strong> {{ character.description|safe }}
+    </p>
+    <p>
+        <strong>Mídias Associadas: </strong>
+        {% for media in character.medias.all %}
+            {% if forloop.last %}
+                {{ media }}.
+            {% else %}
+                {{ media }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Mecânicas Associadas: </strong>
+        {% for mechanic in character.mechanics.all %}
+            {% if forloop.last %}
+                {{ mechanic }}.
+            {% else %}
+                {{ mechanic }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Presente nas fases: </strong>
+        {% for level in character.level_set.all %}
+            {% if forloop.last %}
+                {{ level }}.
+            {% else %}
+                {{ level }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>--------------------------------------------------------------------------------------------------------------------------------------</p>
+{% endfor %}
+
+<hr/>
+
+<h2>Fases</h2>
+{% for level in game.level_set.all %}
+    <h3>Nome: {{ level.name }}</h3>
+    <p>
+        <strong>Descrição: </strong> {{ level.description|safe }}
+    </p>
+    <p>
+        <strong>Roteiro: </strong> {{ level.script|safe }}
+    </p>
+    <p>
+        <strong>Mídias Associadas: </strong>
+        {% for media in level.medias.all %}
+            {% if forloop.last %}
+                {{ media }}.
+            {% else %}
+                {{ media }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Mecânicas Associadas: </strong>
+        {% for mechanic in level.mechanics.all %}
+            {% if forloop.last %}
+                {{ mechanic }}.
+            {% else %}
+                {{ mechanic }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Personagens Presentes: </strong>
+        {% for character in level.characters.all %}
+            {% if forloop.last %}
+                {{ character }}.
+            {% else %}
+                {{ character }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>--------------------------------------------------------------------------------------------------------------------------------------</p>
+{% endfor %}
+
+<hr/>
+
+<h2>Mecânicas</h2>
+{% for mechanic in game.mechanic_set.all %}
+    <h3>Nome: {{ mechanic.name }}</h3>
+    <p>
+        <strong>Descrição: </strong> {{ mechanic.description|safe }}
+    </p>
+    <p>
+        <strong>Mídias Associadas: </strong>
+        {% for media in mechanic.medias.all %}
+            {% if forloop.last %}
+                {{ media }}.
+            {% else %}
+                {{ media }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Presente nas fases: </strong>
+        {% for level in mechanic.level_set.all %}
+            {% if forloop.last %}
+                {{ level }}.
+            {% else %}
+                {{ level }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Presente nos personagens: </strong>
+        {% for character in mechanic.character_set.all %}
+            {% if forloop.last %}
+                {{ character }}.
+            {% else %}
+                {{ character }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>--------------------------------------------------------------------------------------------------------------------------------------</p>
+{% endfor %}
+
+<hr/>
+
+<h2>Mídias</h2>
+{% for media in game.media_set.all %}
+    <h3>Nome: {{ media.name }}</h3>
+    <p>
+        <strong>Descrição: </strong> {{ media.description|safe }}
+    </p>
+    <p>
+        <strong>Tipo: </strong> {{ media.type }}
+    </p>
+    {% if media.type == "PICTURE" %}
+        <img src="{{ media.file.url }}" alt="Imagem" width="400px">
+        <p>
+            <strong>URL da mídia: </strong> <small>{{ media.file.url }}</small>
+        </p>
+    {% elif media.type == "AUDIO" %}
+        <p>
+            <strong>URL da mídia: </strong> <small>{{ media.file.url }}</small>
+        </p>
+    {% else %}
+        <p>
+            <strong>URL da mídia: </strong><small>{{ media.url }}</small>
+        </p>
+    {% endif %}
+
+
+    <p>
+        <strong>Mecânicas Associadas: </strong>
+        {% for mechanic in media.mechanic_set.all %}
+            {% if forloop.last %}
+                {{ mechanic }}.
+            {% else %}
+                {{ mechanic }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Presente nas fases: </strong>
+        {% for level in media.level_set.all %}
+            {% if forloop.last %}
+                {{ level }}.
+            {% else %}
+                {{ level }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <strong>Presente nos personagens: </strong>
+        {% for character in media.character_set.all %}
+            {% if forloop.last %}
+                {{ character }}.
+            {% else %}
+                {{ character }},
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>--------------------------------------------------------------------------------------------------------------------------------------</p>
+{% endfor %}
+
+<hr/>
+
+<div id="footerContent" class="center">
+    <small>Desenvolvido com a Ferramenta GDDMaker - Gerado em: {% now "SHORT_DATE_FORMAT" %}</small>
+</div>
+
+</body>
+</html>

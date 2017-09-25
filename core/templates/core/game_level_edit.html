@@ -1,0 +1,35 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% block content %}
+    <div class="row">
+        <h1 class="">Editar Fase</h1>
+    </div>
+
+        <form action="" method="post" class="form">
+            {% csrf_token %}
+        <div class="row">
+            {% bootstrap_field form.name %}
+            {% bootstrap_field form.description %}
+            {% bootstrap_field form.script %}
+            <div class="col-md-4">
+                {% bootstrap_field form.characters %}
+            </div>
+            <div class="col-md-4">
+                {% bootstrap_field form.medias %}
+            </div>
+            <div class="col-md-4">
+                {% bootstrap_field form.mechanics %}
+            </div>
+        </div>
+            <div class="row">
+            {% buttons %}
+                <button type="submit" class="btn btn-success">
+                    Salvar
+                </button>
+            {% endbuttons %}
+        </div>
+        </form>
+
+
+{% endblock %}

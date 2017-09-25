@@ -1,0 +1,150 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% load embed_video_tags %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                {% bootstrap_messages %}
+                <h1>Personagem: {{ character.name }}</h1>
+                <span class="label label-default text-uppercase">{% bootstrap_icon 'star' %}Faz parte do jogo: {{ character.game.name }}</span>
+                <h4>Descrição</h4>
+                <p>{{ character.description|safe }}</p>
+                <hr/>
+                <h2>Mídias deste personagem</h2>
+                {% if character.medias.count > 0 %}
+
+                    {% for media in character.medias.all %}
+                        <h4 class="text-success">Mídia: {{ media.name }} - Tipo: {{ media.type }}</h4>
+                        <p class="small"><a class="sem-linha" href="{% url 'core:game_media_detail' character.game.id media.id %}">
+                            <span class="label label-success text-uppercase">
+                                {% bootstrap_icon 'blackboard' %}
+                                Ver detalhes
+                            </span>
+                        </a></p>
+                        {% if media.type == "PICTURE" %}
+                            {% if media.file %}
+                                <a href="{{ media.file.url }}">
+                                    <img width="40%"     alt="Clique para ampliar" src="{{ media.file.url }}"/>
+                                </a>
+                            {% elif media.url %}
+                                <a href="{{ media.url }}">
+                                    <img width="40%" alt="Clique para ampliar" src="{{ media.url }}"/>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if media.type == "VIDEO" %}
+                            {% video media.url 'medium' %}
+                        {% endif %}
+
+                        {% if media.type == "AUDIO" %}
+                            {% if media.file %}
+                                <audio controls>
+                                    <source src="{{ media.file.url }}">
+                                </audio>
+                            {% elif media.url %}
+                                <audio controls>
+                                    <source src="{{ media.url }}">
+                                </audio>
+                            {% endif %}
+
+                        {% endif %}
+                        <hr/>
+                    {% endfor %}
+
+                {% else %}
+                    <p class="text-danger">Nenhuma mídia ligada a este personagem.</p>
+                {% endif %}
+
+            </div>
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ações</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'core:game_detail' character.game.id %}" class="btn btn-success center-block">Ir
+                        para o Jogo</a>
+                    <a href="{% url 'core:game_character_history' character.game.id character.id %}" class="center-block btn btn-info">Ver histórico</a>
+                    <a href="{% url 'core:game_character_edit' character.game.id character.id %}"
+                       class="center-block btn btn-warning">Editar Personagem</a>
+                    <a href="{% url 'core:game_character_remove' character.game.id character.id %}"
+                       class="confirm-remove center-block btn btn-danger">Apagar Personagem</a>
+                </div>
+            </div>
+
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Fases <span class="badge">{{ character.level_set.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+                    {% for level in character.level_set.all %}
+                        <a class="sem-linha" href="{% url 'core:game_level_detail' character.game.id level.id %}">
+                            <span class="label label-danger text-uppercase">
+                                {% bootstrap_icon 'list-alt' %}
+                                {{ level.name|truncatechars:'30' }}
+                            </span>
+                        </a>
+                    {% endfor %}
+
+                    <hr/>
+
+                    <a href="{% url 'core:game_level_list' character.game.id %}" class="center-block btn btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mecânicas <span class="badge">{{ character.mechanics.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+                    {% for mechanic in character.mechanics.all %}
+                        <a class="sem-linha" href="{% url 'core:game_mechanic_detail' character.game.id mechanic.id %}">
+                            <span class="label label-warning text-uppercase">
+                                {% bootstrap_icon 'cog' %}
+                                {{ mechanic.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+
+                    <hr/>
+                    <a href="{% url 'core:game_mechanic_list' character.game.id %}" class="center-block btn btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mídias <span class="badge">{{ character.medias.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+                    {% for media in character.medias.all %}
+                        <a class="sem-linha" href="{% url 'core:game_media_detail' character.game.id media.id %}">
+                            <span class="label label-success text-uppercase">
+                                {% bootstrap_icon 'blackboard' %}
+                                {{ media.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+
+                    <hr/>
+                    <a href="{% url 'core:game_media_list' character.game.id %}" class="center-block btn btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

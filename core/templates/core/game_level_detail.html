@@ -1,0 +1,116 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                {% bootstrap_messages %}
+                <h1>Fase: {{ level.name }}</h1>
+                <span class="label label-default text-uppercase">{% bootstrap_icon 'star' %}Faz parte do jogo: {{ level.game.name }}</span>
+                <h4>Descrição</h4>
+                <p>{{ level.description|safe }}</p>
+                <h4>Roteiro</h4>
+                <p>{{ level.script|safe }}</p>
+            </div>
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ações</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'core:game_detail' level.game.id %}" class="btn btn-success center-block">Ir para o
+                        Jogo</a>
+                    <a href="{% url 'core:game_level_history' level.game.id level.id %}" class="center-block btn btn-info">Ver histórico</a>
+                    <a href="{% url 'core:game_level_edit' level.game.id level.id %}" class="center-block btn btn-warning">Editar Fase</a>
+                    <a href="{% url 'core:game_level_remove' level.game.id level.id %}"
+                       class="confirm-remove center-block btn btn-danger">Apagar Fase</a>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Personagens <span class="badge">{{ level.characters.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+                    {% for character in level.characters.all %}
+                        <a class="sem-linha" href="{% url 'core:game_character_detail' level.game.id character.id %}">
+                            <span class="label label-info text-uppercase">
+                                {% bootstrap_icon 'user' %}
+                                {{ character.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                    <hr/>
+                    <a href="{% url 'core:game_character_list' level.game.id %}" class="center-block btn btn-sm btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                    <a href="{% url 'core:game_character_add' level.game.id %}" class="center-block btn-sm btn btn-info">
+                        {% bootstrap_icon 'plus' %}
+                        Adicionar Novo Personagem
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mecânicas <span class="badge">{{ level.mechanics.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+
+                    {% for mechanic in level.mechanics.all %}
+                        <a class="sem-linha" href="{% url 'core:game_mechanic_detail' level.game.id mechanic.id %}">
+                            <span class="label label-warning text-uppercase">
+                                {% bootstrap_icon 'cog' %}
+                                {{ mechanic.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+
+                    <hr/>
+                    <a href="{% url 'core:game_mechanic_list' level.game.id %}" class="center-block btn btn-sm btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                    <a href="{% url 'core:game_mechanic_add' level.game.id %}" class="center-block btn btn-sm btn-warning">
+                        {% bootstrap_icon 'plus' %}
+                        Adicionar Nova Mecânica
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mídias <span class="badge">{{ level.medias.count }}</span></h3>
+                </div>
+                <div class="panel-body">
+
+                    {% for media in level.medias.all %}
+                        <a class="sem-linha" href="{% url 'core:game_media_detail' level.game.id media.id %}">
+                            <span class="label label-success text-uppercase">
+                                {% bootstrap_icon 'blackboard' %}
+                                {{ media.name }}
+                            </span>
+                        </a>
+                    {% endfor %}
+
+
+                    <hr/>
+                    <a href="{% url 'core:game_media_list' level.game.id %}" class="center-block btn btn-sm btn-default">
+                        {% bootstrap_icon 'search' %}
+                        Ver todos
+                    </a>
+                    <a href="{% url 'core:game_media_add' level.game.id %}" class="center-block btn btn-sm btn-success">
+                        {% bootstrap_icon 'plus' %}
+                        Adicionar Nova Mídia
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

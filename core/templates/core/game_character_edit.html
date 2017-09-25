@@ -1,0 +1,34 @@
+{% extends "base2.html" %}
+{% load static %}
+{% load bootstrap3 %}
+{% block content %}
+    <div class="row">
+        <h1 class="">Editar Personagem</h1>
+    </div>
+    <form action="" method="post" class="form">
+        <div class="row">
+
+            {% csrf_token %}
+            {% bootstrap_field form.name %}
+            {% bootstrap_field form.description %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% bootstrap_field form.medias %}
+                </div>
+                <div class="col-md-6">
+                    {% bootstrap_field form.mechanics %}
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            {% buttons %}
+                <button type="submit" class="btn btn-success">
+                    Salvar
+                </button>
+            {% endbuttons %}
+        </div>
+    </form>
+
+
+{% endblock %}
